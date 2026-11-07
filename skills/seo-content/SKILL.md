@@ -1,17 +1,6 @@
 ---
 name: seo-content
-description: >
-  Evaluate page content for usefulness, E-E-A-T, readability, thinness, and AI
-  citation readiness, plus last-mile draft cleanup (AI-typical phrasing and
-  invisible Unicode watermark characters). Use for content-only analysis, not
-  full-page technical checks.
-user-invocable: true
-argument-hint: "[url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Анализ качества текстового контента: проверка соответствия факторам Google E-E-A-T, плотности ключей и уникальности."
 ---
 
 # Content Quality & E-E-A-T Analysis
@@ -36,7 +25,7 @@ merged into core during the March 2024 update).
 
 ## E-E-A-T Framework (updated Sept 2025 QRG)
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/seo/references/eeat-framework.md` for full criteria and `${CLAUDE_PLUGIN_ROOT}/skills/seo/references/eeat-scoring-guide.md` for score bands.
+Read `~/.local/share/omp-seo/skills/seo/references/eeat-framework.md` for full criteria and `~/.local/share/omp-seo/skills/seo/references/eeat-scoring-guide.md` for score bands.
 
 ### Experience (first-hand signals)
 - Original research, case studies, before/after results
@@ -143,8 +132,8 @@ For "humanize this", "remove watermarks", or "clean up this draft", run the
 bundled cleanup script on the user's own content:
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run content_humanize.py draft.md -o cleaned.md
-cat draft.md | "${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run content_humanize.py --json
+omp-seo-run content_humanize.py draft.md -o cleaned.md
+cat draft.md | omp-seo-run content_humanize.py --json
 ```
 
 Two deterministic passes, both logged in the JSON output:
@@ -187,7 +176,7 @@ Optimize for AI search engines (ChatGPT, Perplexity, Google AI Overviews):
 - **Multi-platform tracking:** Monitor visibility across Google AI Overviews, AI Mode, ChatGPT, Perplexity, and Bing Copilot, not just traditional rankings. Treat AI citation as a standalone KPI alongside organic rankings and traffic.
 
 **Generative Engine Optimization (GEO):**
-Per Google's AI optimization guide, "optimizing for generative AI search is optimizing for the search experience, and thus still SEO": AI Overviews and AI Mode are grounded in the same ranking and quality systems as classic Search. The optimization signals that matter (quotability, attribution, heading hierarchy, freshness) are SEO fundamentals applied to AI-search surfaces, not a separate discipline. Cross-reference the `seo-geo` skill for detailed workflows; both surfaces share the primary-source synthesis in `${CLAUDE_PLUGIN_ROOT}/skills/seo-geo/references/google-ai-optimization-guide.md`.
+Per Google's AI optimization guide, "optimizing for generative AI search is optimizing for the search experience, and thus still SEO": AI Overviews and AI Mode are grounded in the same ranking and quality systems as classic Search. The optimization signals that matter (quotability, attribution, heading hierarchy, freshness) are SEO fundamentals applied to AI-search surfaces, not a separate discipline. Cross-reference the `seo-geo` skill for detailed workflows; both surfaces share the primary-source synthesis in `~/.local/share/omp-seo/skills/seo-geo/references/google-ai-optimization-guide.md`.
 
 ## Content Freshness
 
@@ -201,7 +190,7 @@ Before attributing a traffic or ranking change to anything, list the confirmed
 Google updates in that window from the primary-source ledger:
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run seo_updates.py --since <yyyy-mm> --json
+omp-seo-run seo_updates.py --since <yyyy-mm> --json
 ```
 
 Every entry cites a Google-owned URL. If `freshness.stale` is true, say the

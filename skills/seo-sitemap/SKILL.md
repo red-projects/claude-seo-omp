@@ -1,16 +1,6 @@
 ---
 name: seo-sitemap
-description: >
-  Analyze existing XML sitemaps or generate new ones with industry templates.
-  Validates format, URLs, and structure. Use when user says "sitemap",
-  "generate sitemap", "sitemap issues", or "XML sitemap".
-user-invocable: true
-argument-hint: "[url or generate]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Аудит и валидация XML-карт сайта: проверка доступности URL, соответствия sitemap-index, даты lastmod и лимитов."
 ---
 
 # Sitemap Analysis & Generation
@@ -20,7 +10,7 @@ metadata:
 Discover candidates before reporting a sitemap missing:
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run sitemap_discovery.py <url> --json
+omp-seo-run sitemap_discovery.py <url> --json
 ```
 
 The helper reads every bounded `Sitemap:` declaration in robots.txt, validates

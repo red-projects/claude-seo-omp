@@ -1,0 +1,11 @@
+# OMP SEO Sample Project
+
+> High-performance SEO automation and analysis skill for OMP.
+
+## Core Documentation
+- [Architecture](https://example.com/docs/architecture): Headless rendering with system Chromium and local SSRF containment
+- [Skills Overview](https://example.com/docs/skills): Deterministic skill definitions and prompt descriptions
+- [Verification Suite](https://example.com/docs/verify): 5-gate compliance and integrity testing
+
+## Optional Extensions
+- [DataForSEO Integration](https://example.com/docs/dataforseo): Search engine SERP and keyword metrics

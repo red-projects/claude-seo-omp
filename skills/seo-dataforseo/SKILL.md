@@ -1,20 +1,6 @@
 ---
 name: seo-dataforseo
-description: >
-  Live SEO data via DataForSEO MCP server: SERP analysis, keyword research
-  (volume, difficulty, intent, trends), backlink profiles, on-page analysis,
-  competitor and content analysis, business listings, AI visibility (LLM
-  mention tracking), and domain analytics. Requires DataForSEO extension
-  installed. Use when user says "dataforseo", "live SERP", "keyword volume",
-  "backlink data", "AI visibility check", or "real search data".
-user-invocable: true
-argument-hint: "[command] [query]"
-license: MIT
-compatibility: "Requires DataForSEO MCP server"
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Интеграция с API DataForSEO: получение данных поисковой выдачи, стоимости клика, частотности и бэклинков."
 ---
 
 # DataForSEO: Live SEO Data (Extension)
@@ -48,7 +34,7 @@ DataForSEO charges per API call. Be efficient:
 
 **Before every DataForSEO MCP call**, run cost estimation:
 ```
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run dataforseo_costs.py check <endpoint> [--count N]
+omp-seo-run dataforseo_costs.py check <endpoint> [--count N]
 ```
 
 - If `"status": "approved"` → proceed with the API call
@@ -57,7 +43,7 @@ DataForSEO charges per API call. Be efficient:
 
 **After each API call completes**, log the cost:
 ```
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run dataforseo_costs.py log <endpoint> <actual_cost>
+omp-seo-run dataforseo_costs.py log <endpoint> <actual_cost>
 ```
 
 **User commands for cost management:**

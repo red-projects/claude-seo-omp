@@ -1,18 +1,6 @@
 ---
 name: seo-flow
-description: >
-  FLOW framework integration: evidence-led SEO using the Find → Leverage →
-  Optimize → Win loop. Surfaces stage-specific AI prompts from the FLOW
-  knowledge base (41 prompts, CC BY 4.0). Use when user says "FLOW", "FLOW
-  framework", "seo flow", "evidence-led SEO", "find leverage optimize win",
-  or wants stage-specific SEO prompts.
-user-invocable: true
-argument-hint: "[stage] [url|topic]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Оптимизация пути пользователя и конверсионных воронок с учетом поискового интента и органического трафика."
 ---
 
 # FLOW Framework: Find · Leverage · Optimize · Win
@@ -82,7 +70,7 @@ Load prompt files on demand, only for the stage the user requests.
 2. Display the full index: all 41 prompts with stage, name, trigger conditions
 
 ### On `/seo flow sync`
-1. Run: `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run sync_flow.py`
+1. Run: `omp-seo-run sync_flow.py`
 2. Display the JSON summary (files added, updated, unchanged)
 3. Show attribution notice after sync completes
 

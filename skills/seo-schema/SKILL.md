@@ -1,22 +1,13 @@
 ---
 name: seo-schema
-description: >
-  Detect, validate, or generate Schema.org JSON-LD for a supplied page or
-  entity. Use only when structured data or rich-result markup is requested.
-user-invocable: true
-argument-hint: "[url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Валидация и генерация микроразметки Schema.org (JSON-LD): Article, Product, FAQ, LocalBusiness, Breadcrumbs."
 ---
 
 # Schema Markup Analysis & Generation
 
 ## Detection
 
-1. Extract JSON-LD with `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run parse_html.py --url <url> --json`
+1. Extract JSON-LD with `omp-seo-run parse_html.py --url <url> --json`
    (or scan `<script type="application/ld+json">` in the page source). Flag any
    block without `@context` or `@type`: Google cannot attach it to an entity (a
    rating in such a block does not reach the Product).

@@ -1,17 +1,6 @@
 ---
 name: seo-technical
-description: >
-  Audit technical SEO across crawlability, indexability, security, URLs, mobile,
-  Core Web Vitals, rendering, structured data, and IndexNow. Use when the user
-  asks for a technical SEO audit or about crawling, indexing, rendering, or
-  site speed. Exclude content strategy and backlinks.
-user-invocable: true
-argument-hint: "[url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Глубокий технический аудит: краулинг, индексация, robots.txt, HTTP-коды, каноникалы, редиректы, JS-рендеринг."
 ---
 
 # Technical SEO Audit
@@ -20,7 +9,7 @@ metadata:
 
 ### 1. Crawlability
 - robots.txt: exists, valid, not blocking important resources
-- XML sitemap: run `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run sitemap_discovery.py <url> --json`; require a
+- XML sitemap: run `omp-seo-run sitemap_discovery.py <url> --json`; require a
   valid entry in `found`, and report stale or unsafe robots.txt declarations
   separately from working fallback locations
 - Noindex tags: intentional vs accidental
@@ -161,7 +150,7 @@ Allow: /
 - See seo-schema skill for full analysis
 
 ### 8. JavaScript Rendering
-- Method: `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agentic_check.py <url> --json` reports visible words in the raw HTML (`server-rendered`); compare with `render_page.py <url> --mode always --json` when Chromium is available. Without Chromium, report the raw-HTML result and say rendered content was not compared.
+- Method: `omp-seo-run agentic_check.py <url> --json` reports visible words in the raw HTML (`server-rendered`); compare with `render_page.py <url> --mode always --json` when Chromium is available. Without Chromium, report the raw-HTML result and say rendered content was not compared.
 - Check if content visible in initial HTML vs requires JS
 - Identify client-side rendered (CSR) vs server-side rendered (SSR)
 - Flag SPA frameworks (React, Vue, Angular) that may cause indexing issues
@@ -210,7 +199,7 @@ to `seo-agentic` for the rest:
 - A 5xx robots.txt, which compliant crawlers read as "disallow everything".
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agent_ux_check.py https://example.com --json
+omp-seo-run agent_ux_check.py https://example.com --json
 ```
 
 The Agent-UX 0-100 score above is a local heuristic. Keep it distinct from the
@@ -251,7 +240,7 @@ If DataForSEO MCP tools are available, use `on_page_instant_pages` for real page
 
 ## Google API Integration (Optional)
 
-If Google API credentials are configured, use `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run pagespeed_check.py <url> --json` for real PSI + CrUX field data (replaces lab-only CWV estimates), `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run crux_history.py <url> --form-factor PHONE --json` for 25-week CWV trends (use PHONE: the all-devices view can hide a mobile failure), and `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run gsc_inspect.py <url> --json` for real indexation status per URL.
+If Google API credentials are configured, use `omp-seo-run pagespeed_check.py <url> --json` for real PSI + CrUX field data (replaces lab-only CWV estimates), `omp-seo-run crux_history.py <url> --form-factor PHONE --json` for 25-week CWV trends (use PHONE: the all-devices view can hide a mobile failure), and `omp-seo-run gsc_inspect.py <url> --json` for real indexation status per URL.
 
 ## Auditing a Local or Private Host
 
@@ -261,7 +250,7 @@ To audit a pre-deployment host, the operator names it in `CLAUDE_SEO_LOCAL_TARGE
 
 ```bash
 CLAUDE_SEO_LOCAL_TARGETS="localhost:3000,127.0.0.1:8080,100.101.102.103" \
-  "${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run fetch_page.py http://localhost:3000/
+  omp-seo-run fetch_page.py http://localhost:3000/
 ```
 
 What it does and does not cover:

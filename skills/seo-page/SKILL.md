@@ -1,15 +1,6 @@
 ---
 name: seo-page
-description: >
-  Analyze one supplied URL across on-page, content, technical metadata, schema,
-  images, and performance. Use only for a single-page review.
-user-invocable: true
-argument-hint: "[url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Глубокий постраничный on-page SEO аудит одного URL: мета-теги, заголовки, разметка, скорость и контент."
 ---
 
 # Single Page Analysis
@@ -20,7 +11,7 @@ metadata:
 - Title tag: 50-60 characters, includes primary keyword, unique
 - Meta description: 150-160 characters, compelling, includes keyword
 - Meta description is not a restatement of the title: run
-  `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run metadata_template.py --title "<title>" --description "<desc>" --json`
+  `omp-seo-run metadata_template.py --title "<title>" --description "<desc>" --json`
   (heuristic, deterministic string comparison). A description that opens by
   repeating its own title and closes on a stock CTA ("Try it free now.",
   "Start free!") is templated metadata, the shape bulk generation jobs produce

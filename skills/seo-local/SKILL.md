@@ -1,17 +1,6 @@
 ---
 name: seo-local
-description: >
-  Audit local SEO, including Google Business Profile, NAP consistency,
-  citations, reviews, local schema, location pages, and multi-location
-  structure. Use when the user asks about local SEO, a local business, the map
-  pack, or a GBP profile; use seo-maps for geo-grid rank tracking.
-user-invocable: true
-argument-hint: "[url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Локальное SEO: оптимизация профиля компании (GBP), NAP-данные, гео-запросы, отзывы и локальные посадочные."
 ---
 
 # Local SEO Analysis (March 2026)

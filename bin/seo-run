@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Resolves REPO_ROOT via readlink -f so it works when called via symlink
+TARGET_FILE="${BASH_SOURCE[0]}"
+while [[ -L "${TARGET_FILE}" ]]; do
+    TARGET_DIR="$(cd -P "$(dirname "${TARGET_FILE}")" && pwd)"
+    TARGET_FILE="$(readlink "${TARGET_FILE}")"
+    [[ "${TARGET_FILE}" != /* ]] && TARGET_FILE="${TARGET_DIR}/${TARGET_FILE}"
+done
+REAL_SCRIPT_DIR="$(cd -P "$(dirname "${TARGET_FILE}")" && pwd)"
+REPO_ROOT="$(cd -P "${REAL_SCRIPT_DIR}/.." && pwd)"
+
+# Interpreter resolution (.venv preferred, fallback to system python3)
+if [[ -x "${REPO_ROOT}/.venv/bin/python" ]]; then
+    PYTHON_BIN="${REPO_ROOT}/.venv/bin/python"
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON_BIN="$(command -v python3)"
+else
+    echo "Error: no python interpreter found in ${REPO_ROOT}/.venv or system PATH" >&2
+    exit 2
+fi
+
+# Extract ALLOWED_CORE_SCRIPTS from scripts/runtime.py
+print_allowed_scripts() {
+    "${PYTHON_BIN}" -c "
+import sys
+sys.path.insert(0, '${REPO_ROOT}/scripts')
+try:
+    from runtime import ALLOWED_CORE_SCRIPTS
+    for script in sorted(ALLOWED_CORE_SCRIPTS):
+        print(script)
+except Exception:
+    sys.exit(1)
+" 2>/dev/null || {
+    sed -n '/ALLOWED_CORE_SCRIPTS = frozenset(/,/)/p' "${REPO_ROOT}/scripts/runtime.py" \
+      | grep -o '"[^"]*\.py"' | tr -d '"' | sort -u
+}
+}
+
+if [[ $# -eq 0 ]] || [[ "$1" == "--list" ]] || [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+    print_allowed_scripts
+    exit 0
+fi
+
+SCRIPT_NAME="$1"
+
+# Reject path traversal, directory separators, or non-basename references
+if [[ "${SCRIPT_NAME}" == *"/"* ]] || [[ "${SCRIPT_NAME}" == *"\\"* ]] || [[ "${SCRIPT_NAME}" == *".."* ]]; then
+    echo "Error: path traversal or directory components not allowed in script name: ${SCRIPT_NAME}" >&2
+    exit 2
+fi
+
+# Whitelist validation
+ALLOWED_LIST="$(print_allowed_scripts)"
+if ! echo "${ALLOWED_LIST}" | grep -Fqx "${SCRIPT_NAME}"; then
+    echo "Error: '${SCRIPT_NAME}' is not in ALLOWED_CORE_SCRIPTS" >&2
+    exit 2
+fi
+
+TARGET_SCRIPT="${REPO_ROOT}/scripts/${SCRIPT_NAME}"
+if [[ ! -f "${TARGET_SCRIPT}" ]]; then
+    echo "Error: target script does not exist: ${TARGET_SCRIPT}" >&2
+    exit 2
+fi
+
+# Configure isolated OMP runtime environment
+export PYTHONPATH="${REPO_ROOT}/omp:${REPO_ROOT}/scripts:${PYTHONPATH:-}"
+export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="${PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH:-/usr/bin/chromium}"
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
+exec "${PYTHON_BIN}" "${TARGET_SCRIPT}" "${@:2}"

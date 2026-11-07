@@ -1,21 +1,6 @@
 ---
 name: seo-maps
-description: >
-  Maps intelligence for local SEO: geo-grid rank tracking, GBP profile
-  auditing via API, review intelligence across Google/Tripadvisor/Trustpilot,
-  cross-platform NAP verification, competitor radius mapping, and
-  LocalBusiness schema generation. Three tiers: free (Overpass + Geoapify),
-  DataForSEO, and DataForSEO + Google. Use when user says "maps", "geo-grid",
-  "rank tracking", "GBP audit", "review velocity", "competitor radius", or
-  "SoLV".
-user-invocable: true
-argument-hint: "[command] [url|keyword|location]"
-license: MIT
-compatibility: "DataForSEO MCP for Tier 1+, Google Maps API for Tier 2"
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Аудит видимости на онлайн-картах: гео-ранжирование, радиус присутствия, категории карточки и репутация."
 ---
 
 # Maps Intelligence (March 2026)

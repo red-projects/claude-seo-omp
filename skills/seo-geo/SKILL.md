@@ -1,17 +1,6 @@
 ---
 name: seo-geo
-description: >
-  Audit and improve content for AI Overviews and answer engines, including
-  citability, entity clarity, crawler access, brand signals, and passage
-  structure. Use when the user asks about AI Overviews, AI Mode, ChatGPT,
-  Perplexity or Gemini citations, GEO, or AI search visibility.
-user-invocable: true
-argument-hint: "[url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Оптимизация под AI-поисковики (GEO/AEO): цитируемость в ChatGPT, Perplexity, Google AI Overviews и Gemini."
 ---
 
 # AI Search / GEO Optimization (May 2026)
@@ -332,7 +321,7 @@ Google added many AI citation/source surfaces across AI Overviews **and** AI Mod
 
 For AI Overviews or AI Mode visibility changes, check the dated product and
 core-update entries first:
-`"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run seo_updates.py --kind product --kind core --json`.
+`omp-seo-run seo_updates.py --kind product --kind core --json`.
 Treat a stale ledger (`freshness.stale`) as incomplete.
 
 ## Output

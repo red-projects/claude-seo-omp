@@ -1,20 +1,6 @@
 ---
 name: seo-content-brief
-description: >
-  Generate competitive SEO content briefs with per-section word counts,
-  competitor scoring, keyword placement guidance, and page-type templates.
-  Supports both new page briefs and improve-existing-page briefs.
-  Use when user says "content brief", "write a brief", "content outline",
-  "blog brief", "service page brief", "brief for", "writing brief",
-  "content plan", or "outline for".
-user-invocable: true
-argument-hint: "[url-or-keyword] [page-type]"
-license: MIT
-metadata:
-  author: puneetindersingh
-  original_author: puneetindersingh
-  version: "1.0.0"
-  category: seo
+description: "Генерация технического задания (Brief) на SEO-копирайтинг: структура H1-H3, LSI-слова, интент и требования E-E-A-T."
 ---
 
 # SEO Content Brief Generator

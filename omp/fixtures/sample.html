@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sample SEO Verification Page</title>
+  <meta name="description" content="A comprehensive sample page designed for testing OMP SEO parser and headless browser rendering engines.">
+  <link rel="canonical" href="https://example.com/sample">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://example.com/#org",
+        "name": "Sample Corp",
+        "url": "https://example.com"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://example.com/sample#webpage",
+        "url": "https://example.com/sample",
+        "name": "Sample SEO Verification Page",
+        "isPartOf": { "@id": "https://example.com/#org" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <h1>Welcome to the OMP SEO Verification Testbed</h1>
+  <p>This paragraph contains rich descriptive text designed to satisfy content length requirements and verify visible text extraction.</p>
+  <p>We test headless browser automation with system Chromium, ensuring zero browser binary downloads and strict local SSRF containment.</p>
+  <h2>Technical Details</h2>
+  <p>Playwright launches system Chromium with disabled GPU and sandbox flags in headless mode for maximum reliability on Arch Linux.</p>
+</body>
+</html>

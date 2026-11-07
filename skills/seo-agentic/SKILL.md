@@ -1,20 +1,6 @@
 ---
 name: seo-agentic
-description: >
-  Audit and fix agent readiness: the Lighthouse Agentic Browsing fraction,
-  accessibility tree for agents, robots.txt and Content-Signal for AI agents,
-  WAF treatment of agent traffic, llms.txt, Markdown delivery, ai-catalog.json,
-  /.well-known discovery files, and WebMCP tools. Use when the user asks
-  whether AI agents can use or browse the site, or about llms.txt or WebMCP.
-  Exclude AI citability and brand signals (seo-geo) and commerce protocol
-  depth (seo-ecommerce).
-user-invocable: true
-argument-hint: "[audit|fix|lighthouse|refresh] [url]"
-license: MIT
-metadata:
-  author: AgriciDaniel
-  version: "2.5.0"
-  category: seo
+description: "Оценка готовности сайта к AI-агентам: аудит llms.txt, разметка WebMCP, доступность контента для браузерных LLM."
 ---
 
 # Agentic Browsing Readiness
@@ -43,19 +29,19 @@ only ChatGPT desktop calls tools by default).
 Run the steps in this order and keep every tool's JSON for the report.
 
 1. **Lighthouse fraction.**
-   `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run lighthouse_agentic.py <url> --strategy both --json`.
+   `omp-seo-run lighthouse_agentic.py <url> --strategy both --json`.
    Uses PSI v5 (`category=AGENTIC_BROWSING`); a Google API key avoids the
    shared anonymous quota. With a saved report use `--from-json <file>`.
    Report the fraction as `X/N` exactly as computed. Never convert it to a
    percentage and never assume N: it is at most 6, and N/A and informative
    audits drop out. Read `references/lighthouse-agentic-category.md` before explaining it.
 2. **HTTP and markup checks.**
-   `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agentic_check.py <url> --json`.
+   `omp-seo-run agentic_check.py <url> --json`.
    Covers server-rendered content, robots.txt groups per AI agent and
    Content-Signal, llms.txt, Markdown delivery, ai-catalog.json, `/.well-known`
    documents, and WebMCP markup.
 3. **Accessibility tree.**
-   `"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agent_ux_check.py <url> --json`.
+   `omp-seo-run agent_ux_check.py <url> --json`.
    A local 0-100 heuristic; present it separately from the Lighthouse fraction.
    Page-level criteria: `references/agent-friendly-pages.md`.
 4. **WAF behaviour (only with authorization).** Add `--ua-matrix` to step 2
@@ -119,10 +105,10 @@ are listed as options either way.
 Drafts go to stdout for review; nothing is deployed and no file is overwritten.
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agentic_fix.py robots <url> --signal "search=yes, ai-input=yes, ai-train=no"
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agentic_fix.py llms <url>
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agentic_fix.py ai-catalog --publisher example.com --entry "Name|media type|url"
-"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run agentic_fix.py webmcp <url> --json
+omp-seo-run agentic_fix.py robots <url> --signal "search=yes, ai-input=yes, ai-train=no"
+omp-seo-run agentic_fix.py llms <url>
+omp-seo-run agentic_fix.py ai-catalog --publisher example.com --entry "Name|media type|url"
+omp-seo-run agentic_fix.py webmcp <url> --json
 ```
 
 - `robots` adds Content-Signal to each group and never changes Allow or

@@ -192,3 +192,9 @@ id_ed25519.*
 # Local scratch and generated decks (never shipped)
 tmp/
 outputs/
+
+# OMP adaptation layer (venv, hook cache, generated audit artifacts)
+.playwright/
+.omp-runtime/
+omp/audit-report.json
+*.py[cod]
