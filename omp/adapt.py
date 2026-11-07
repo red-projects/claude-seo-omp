@@ -4,12 +4,14 @@ Deterministic Skill Adapter for OMP.
 
 Adapts skills/*/SKILL.md frontmatter and launcher paths for OMP runtime compatibility:
 - Replaces frontmatter with strictly {name, description} (<=300 bytes UTF-8).
-- Rewrites Claude Code launcher references to `omp-seo-run`.
+- Rewrites Claude Code launcher references and preambles to canonical OMP `omp-seo-run`.
+- Cleans installer and manual path notes ($HOME/.claude, ./scripts/claude-seo).
 - Fully idempotent: running multiple times produces 0 changes.
 """
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -77,12 +79,28 @@ def adapt_skill(skill_file: Path) -> bool:
 
     body = "".join(lines[closing_idx + 1:])
 
+    # Canonical OMP runtime preamble
+    canonical_runtime = (
+        "**Runtime:** Run bundled Python tools through `omp-seo-run <script.py>`. "
+        "That is the single canonical form used by every skill and agent in OMP. "
+        "Never invoke bundled scripts with a bare Python interpreter."
+    )
+    body = re.sub(
+        r"\*\*Runtime:\*\*.*?with a bare Python interpreter\.",
+        canonical_runtime,
+        body,
+        flags=re.DOTALL,
+    )
+
     # Canonical path and invocation replacements (ordered specific to general)
     body = body.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run ', "omp-seo-run ")
     body = body.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo run ", "omp-seo-run ")
     body = body.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo"', "omp-seo-run")
     body = body.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo", "omp-seo-run")
     body = body.replace("${CLAUDE_PLUGIN_ROOT}", "~/.local/share/omp-seo")
+    body = body.replace('"$HOME/.claude/skills/', "omp-seo-run")
+    body = body.replace("$HOME/.claude/skills/", "omp-seo-run")
+    body = body.replace("./scripts/claude-seo", "omp-seo-run")
 
     new_content = new_frontmatter + body
 

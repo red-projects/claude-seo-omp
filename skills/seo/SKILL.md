@@ -7,15 +7,7 @@ description: "Комплексный SEO-аудит сайта: техничес
 
 **Invocation:** `/seo $1 $2` where `$1` is the command and `$2` is the URL or argument.
 
-**Runtime:** Run bundled Python tools through
-`omp-seo-run <script.py>`. That is the single
-canonical form used by every skill and agent. Claude Code expands
-`~/.local/share/omp-seo` to the installed plugin directory, so the launcher is
-found without any `PATH` entry; the repository ships no top-level `bin/`
-directory because hosted marketplaces reject one. Repository users run
-`./scripts/claude-seo`; manual installers rewrite the canonical form to
-`"$HOME/.claude/skills/seo/scripts/claude-seo"`. Never invoke bundled scripts
-with a bare Python interpreter.
+**Runtime:** Run bundled Python tools through `omp-seo-run <script.py>`. That is the single canonical form used by every skill and agent in OMP. Never invoke bundled scripts with a bare Python interpreter.
 
 Comprehensive SEO analysis across all industries (SaaS, local services,
 e-commerce, publishers, agencies). Orchestrates 25 sub-skills (22 core + 1 framework

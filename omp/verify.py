@@ -113,6 +113,12 @@ def run_gate3() -> bool:
         if "${CLAUDE_PLUGIN_ROOT}" in content or '"${CLAUDE_PLUGIN_ROOT}"' in content:
             print(f"FAIL: Found ${{CLAUDE_PLUGIN_ROOT}} in {sf}")
             return False
+        if "$HOME/.claude" in content:
+            print(f"FAIL: Found $HOME/.claude in {sf}")
+            return False
+        if "./scripts/claude-seo" in content:
+            print(f"FAIL: Found ./scripts/claude-seo in {sf}")
+            return False
 
     cmd = ["git", "diff", "v2.5.0", "--stat", "--", "scripts/", "hooks/", "skills/seo/references/"]
     res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True)
