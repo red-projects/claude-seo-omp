@@ -64,7 +64,7 @@ For every generation request:
 2. **Apply SEO defaults** from the use cases table above
 3. **Set aspect ratio** via `set_aspect_ratio` MCP tool
 4. **Construct Reasoning Brief** using the banana Creative Director pipeline:
-   - Load `references/prompt-engineering.md` for the 6-component system
+   - Load `~/.local/share/omp-seo/skills/seo-image-gen/references/prompt-engineering.md` for the 6-component system
    - Apply domain mode emphasis (Subject 30%, Style 25%, Context 15%, etc.)
    - Be SPECIFIC and VISCERAL: describe what the camera sees
 5. **Generate** via `gemini_generate_image` MCP tool
@@ -76,7 +76,7 @@ If the user mentions a brand or has SEO presets configured:
 ```bash
 # Use the installed Banana MCP/tool configuration to list presets.
 ```
-Load matching preset and apply as defaults. Also check `references/seo-image-presets.md`
+Load matching preset and apply as defaults. Also check `~/.local/share/omp-seo/skills/seo-image-gen/references/seo-image-presets.md`
 for SEO-specific preset templates.
 
 ## Post-Generation SEO Checklist
@@ -134,7 +134,7 @@ Approximate costs:
 | MCP not configured | Run `./extensions/banana/install.sh` |
 | API key invalid | New key at https://aistudio.google.com/apikey |
 | Rate limited (429) | Wait 60s, retry. Free tier: ~10 RPM / ~500 RPD |
-| `IMAGE_SAFETY` | Rephrase prompt - see `references/prompt-adaptation-safety.md` |
+| `IMAGE_SAFETY` | Rephrase prompt - see `~/.local/share/omp-seo/skills/seo-image-gen/references/prompt-adaptation-safety.md` |
 | MCP unavailable | Configure MCP with `./extensions/banana/install.sh`; claude-seo does not vendor a local generation fallback script |
 | Extension not installed | Show install instructions: `./extensions/banana/install.sh` |
 
@@ -147,15 +147,15 @@ Approximate costs:
 ## Reference Documentation
 
 Load on-demand. Do NOT load all at startup:
-- `references/prompt-engineering.md`: 6-component system, domain modes, advanced techniques
-- `references/prompt-templates.md`: ready-to-use templates by use case
-- `references/prompt-adaptation-safety.md`: model adaptation rules, common mistakes, safety-filter rephrasing
-- `references/gemini-models.md`:Model specs, rate limits, capabilities
-- `references/mcp-tools.md`:MCP tool parameters and responses
-- `references/post-processing.md`:ImageMagick/FFmpeg pipeline recipes
-- `references/cost-tracking.md`:Pricing, usage tracking
-- `references/presets.md`:Brand preset management
-- `references/seo-image-presets.md`:SEO-specific preset templates
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/prompt-engineering.md`: 6-component system, domain modes, advanced techniques
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/prompt-templates.md`: ready-to-use templates by use case
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/prompt-adaptation-safety.md`: model adaptation rules, common mistakes, safety-filter rephrasing
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/gemini-models.md`:Model specs, rate limits, capabilities
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/mcp-tools.md`:MCP tool parameters and responses
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/post-processing.md`:ImageMagick/FFmpeg pipeline recipes
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/cost-tracking.md`:Pricing, usage tracking
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/presets.md`:Brand preset management
+- `~/.local/share/omp-seo/skills/seo-image-gen/references/seo-image-presets.md`:SEO-specific preset templates
 
 ## Response Format
 

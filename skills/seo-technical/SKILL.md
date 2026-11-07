@@ -111,7 +111,7 @@ Allow: /
   other path. The current PHP critical-RCE advisory (CVE-2026-109618 /
   CVE-2026-109619, CVSS v4.0 9.2, fixed in PHP 8.5.12 / 8.4.27 / 8.3.36 /
   8.2.35), detection signals, and reporting bands are in
-  `references/stack-cve-exposure.md`. A version string below the fixed list is
+  `~/.local/share/omp-seo/skills/seo-technical/references/stack-cve-exposure.md`. A version string below the fixed list is
   High (likely exposed, confirm with the host), because distributions backport
   fixes without changing it; it is Critical only when the owner confirms an
   unpatched build. A managed or static host with no PHP signal is not exposed by

@@ -4,7 +4,7 @@ OMP SEO 5-Gate Verification Suite.
 
 Gate 1: Frontmatter & Byte Budget (26 skills, strictly {name, description}, UTF-8 bytes <= 300)
 Gate 2: Negative Control Byte Gate (ensures validator actively rejects 301-byte descriptions)
-Gate 3: Clean Paths & Upstream Code Integrity (no CLAUDE_PLUGIN_ROOT in SKILL.md, 0-line diff with v2.5.0)
+Gate 3: Clean Paths, Canonical References & Upstream Code Integrity (no CLAUDE_PLUGIN_ROOT in SKILL.md, canonical existing references, 0-line diff with v2.5.0)
 Gate 4: Offline Core Scripts (parse_html.py and schema_ecommerce_validate.py on local fixtures)
 Gate 5: Live Local HTTP Server + System Chromium + SSRF Guard (negative SSRF block and positive Playwright render)
 """
@@ -108,6 +108,15 @@ def run_gate2() -> bool:
 def run_gate3() -> bool:
     print("--- Gate 3: Clean Paths & Upstream Code Integrity ---")
     skills_dir = REPO_ROOT / "skills"
+    canonical_prefix = "~/.local/share/omp-seo/skills/"
+    canonical_pattern = re.compile(
+        r"~/\.local/share/omp-seo/skills/([a-z0-9-]+)/references/([a-zA-Z0-9_-]+\.md)"
+    )
+    ref_pattern = re.compile(
+        r"(?<![\w./~-])((?:[^\s`\"'()\[\]<>]*/)?references/[a-zA-Z0-9_-]+\.md)"
+    )
+
+    total_canonical_refs = 0
     for sf in sorted(skills_dir.glob("*/SKILL.md")):
         content = sf.read_text(encoding="utf-8")
         if "${CLAUDE_PLUGIN_ROOT}" in content or '"${CLAUDE_PLUGIN_ROOT}"' in content:
@@ -120,6 +129,25 @@ def run_gate3() -> bool:
             print(f"FAIL: Found ./scripts/claude-seo in {sf}")
             return False
 
+        # 1. Verify no bare relative `references/` remains without canonical prefix
+        for m in ref_pattern.finditer(content):
+            tok = m.group(1)
+            if not tok.startswith(canonical_prefix):
+                print(f"FAIL: Bare relative reference '{tok}' found in {sf}")
+                return False
+
+        # 2. Verify every canonical reference path actually exists on disk
+        for m in canonical_pattern.finditer(content):
+            mod = m.group(1)
+            ref_file = m.group(2)
+            target = skills_dir / mod / "references" / ref_file
+            if not target.is_file():
+                print(
+                    f"FAIL: Canonical reference '{m.group(0)}' in {sf} points to missing target: {target}"
+                )
+                return False
+            total_canonical_refs += 1
+
     cmd = ["git", "diff", "v2.5.0", "--stat", "--", "scripts/", "hooks/", "skills/seo/references/"]
     res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True)
     if res.returncode != 0:
@@ -129,9 +157,11 @@ def run_gate3() -> bool:
         print(f"FAIL: Upstream directories have modifications relative to v2.5.0:\n{res.stdout}")
         return False
 
-    print("PASS: No ${CLAUDE_PLUGIN_ROOT} in SKILL.md and 0-line diff against v2.5.0 on protected upstream paths")
+    print(
+        f"PASS: Clean paths, {total_canonical_refs} canonical references verified on disk, "
+        "and 0-line diff against v2.5.0 on protected upstream paths"
+    )
     return True
-
 
 def run_gate4() -> bool:
     print("--- Gate 4: Offline Core Scripts ---")

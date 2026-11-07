@@ -218,7 +218,7 @@ Key rules:
 When analyzing a multi-language site, go beyond technical hreflang validation to assess
 whether the content is culturally adapted for each target market.
 
-Load `references/cultural-profiles.md` for pre-built profiles (DACH, Francophone, Hispanic, Japanese).
+Load `~/.local/share/omp-seo/skills/seo-hreflang/references/cultural-profiles.md` for pre-built profiles (DACH, Francophone, Hispanic, Japanese).
 
 **Assessment steps:**
 1. Identify all language versions and their target markets
@@ -237,7 +237,7 @@ Load `references/cultural-profiles.md` for pre-built profiles (DACH, Francophone
 
 Audit content parity across all language versions of a site or local content directory.
 
-Load `references/content-parity.md` for the full parity matrix and scoring methodology.
+Load `~/.local/share/omp-seo/skills/seo-hreflang/references/content-parity.md` for the full parity matrix and scoring methodology.
 
 **What it checks:**
 - Page existence across all declared languages
@@ -251,7 +251,7 @@ Load `references/content-parity.md` for the full parity matrix and scoring metho
 
 ## Locale Format Validation
 
-Load `references/locale-formats.md` for number, date, currency, address, and phone format
+Load `~/.local/share/omp-seo/skills/seo-hreflang/references/locale-formats.md` for number, date, currency, address, and phone format
 reference tables per locale.
 
 **Checks:**
@@ -263,10 +263,10 @@ reference tables per locale.
 ## Reference Files
 
 Load on-demand as needed (do NOT load all at startup):
-- `references/cultural-profiles.md`: DACH, Francophone, Hispanic, Japanese cultural adaptation profiles
-- `references/locale-formats.md`: Number, date, currency, address, phone format tables per locale
-- `references/content-parity.md`: Content parity audit methodology and scoring
-- `references/machine-translation-qa.md`: Flags unreviewed machine translation, which Google's spam policy treats as scaled content abuse
+- `~/.local/share/omp-seo/skills/seo-hreflang/references/cultural-profiles.md`: DACH, Francophone, Hispanic, Japanese cultural adaptation profiles
+- `~/.local/share/omp-seo/skills/seo-hreflang/references/locale-formats.md`: Number, date, currency, address, phone format tables per locale
+- `~/.local/share/omp-seo/skills/seo-hreflang/references/content-parity.md`: Content parity audit methodology and scoring
+- `~/.local/share/omp-seo/skills/seo-hreflang/references/machine-translation-qa.md`: Flags unreviewed machine translation, which Google's spam policy treats as scaled content abuse
 
 ## Error Handling
 

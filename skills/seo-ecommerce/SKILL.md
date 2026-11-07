@@ -137,7 +137,7 @@ omp-seo-run dataforseo_normalize.py results.json --module merchant
 - Image count per listing
 - Availability status distribution
 
-Load `references/marketplace-endpoints.md` for full API parameter details.
+Load `~/.local/share/omp-seo/skills/seo-ecommerce/references/marketplace-endpoints.md` for full API parameter details.
 
 ---
 
@@ -308,7 +308,7 @@ and ucp.dev.
 Merchants already on **Google Merchant Center** with clean Product schema can
 declare a UCP profile at `/.well-known/ucp` listing capabilities
 (`dev.ucp.shopping.checkout`, `.fulfillment`, `.discount`). See
-`references/ucp-universal-commerce-protocol.md` for audit criteria,
+`~/.local/share/omp-seo/skills/seo-ecommerce/references/ucp-universal-commerce-protocol.md` for audit criteria,
 capability examples, and the relationship to AP2 (Agent Payments Protocol).
 
 ### Audit command

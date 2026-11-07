@@ -29,7 +29,7 @@ Config file: `~/.config/claude-seo/google-api.json`
 }
 ```
 
-If missing, read `references/auth-setup.md` and walk the user through setup.
+If missing, read `~/.local/share/omp-seo/skills/seo-google/references/auth-setup.md` and walk the user through setup.
 
 ### Credential Tiers
 
@@ -77,7 +77,7 @@ Always communicate the detected tier before running commands.
 Combined Lighthouse lab data + CrUX field data.
 
 **Script:** `omp-seo-run pagespeed_check.py <url> --json`
-**Reference:** `references/pagespeed-crux-api.md` (Core Web Vitals thresholds: `references/crux-history-api.md`)
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/pagespeed-crux-api.md` (Core Web Vitals thresholds: `~/.local/share/omp-seo/skills/seo-google/references/crux-history-api.md`)
 **Report the Lighthouse build** from the output's `lighthouse_version` field instead of assuming the latest release.
 **Default:** Both mobile + desktop strategies, all Lighthouse categories.
 
@@ -95,7 +95,7 @@ CrUX field data only (no Lighthouse run). Faster.
 25-week CrUX History trends. Shows whether CWV metrics are improving, stable, or degrading.
 
 **Script:** `omp-seo-run crux_history.py <url> --json`
-**Reference:** `references/crux-history-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/crux-history-api.md`
 
 Output includes per-metric trend direction, percentage change, and weekly p75 values.
 
@@ -108,10 +108,10 @@ Output includes per-metric trend direction, percentage change, and weekly p75 va
 Search Analytics: clicks, impressions, CTR, position for last 28 days.
 
 **Script:** `omp-seo-run gsc_query.py --property <property> --json`
-**Reference:** `references/search-console-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/search-console-api.md`
 **Default:** 28 days, dimensions=query,page, type=web, limit=1000.
 
-For EU sites, read `references/dma-consent-mode-v2.md` before interpreting CTR
+For EU sites, read `~/.local/share/omp-seo/skills/seo-google/references/dma-consent-mode-v2.md` before interpreting CTR
 or GA4 drops: DMA and Consent Mode v2 change what Search Console and GA4 record.
 
 Includes quick-win detection: queries at position 4-10 with high impressions.
@@ -166,7 +166,7 @@ specific URLs are indexed.
 Notify Google of a URL update.
 
 **Script:** `omp-seo-run indexing_notify.py <url> --json`
-**Reference:** `references/indexing-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/indexing-api.md`
 
 The Indexing API is officially for JobPosting and BroadcastEvent/VideoObject pages.
 Always inform the user of this restriction. Daily quota: 200 publish requests.
@@ -186,7 +186,7 @@ Batch submit URLs from a file. Tracks quota usage.
 Organic traffic report: daily sessions, users, pageviews, bounce rate, engagement.
 
 **Script:** `omp-seo-run ga4_report.py --property <id> --json`
-**Reference:** `references/ga4-data-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/ga4-data-api.md`
 **Default:** 28 days, filtered to Organic Search channel group.
 
 > **GA4 "AI Assistants" channel (live ~2026-05-13):** GA4 added a native *AI Assistants* Default Channel Group. Sessions referred by a recognized AI assistant get `medium=ai-assistant`. Google's recognized sources are **ChatGPT, Gemini, Claude, Deepseek, Copilot, Grok** and the channel **excludes** Google AI Overviews / AI Mode. **Verify Perplexity separately if needed**; unsupported sources may stay in Referral, and most AI sessions arrive referrer-less and fall into **Direct**, so this channel undercounts AI traffic. Forward-only, no backfill.
@@ -208,7 +208,7 @@ Some third-party studies report a 0.737 correlation between YouTube mentions and
 Search YouTube for videos. Returns title, channel, views, likes, duration.
 
 **Script:** `omp-seo-run youtube_search.py search "<query>" --json`
-**Reference:** `references/youtube-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/youtube-api.md`
 **Quota:** 100 units per search (10,000 units/day free).
 
 ### `/seo google youtube-video <video_id>`
@@ -229,7 +229,7 @@ Google NLP entity/sentiment output for internal content-quality checks. Do not t
 Full NLP analysis: entities, sentiment, content classification.
 
 **Script:** `omp-seo-run nlp_analyze.py --url <url> --json` or `--text "..."`
-**Reference:** `references/nlp-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/nlp-api.md`
 **Free tier:** 5,000 units/month. Requires billing enabled on GCP project.
 
 ### `/seo google entities <url-or-text>`
@@ -249,7 +249,7 @@ Gold-standard keyword volume data. Requires Google Ads account.
 Generate keyword ideas from seed terms.
 
 **Script:** `omp-seo-run keyword_planner.py ideas "<seed>" --json`
-**Reference:** `references/keyword-planner-api.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/keyword-planner-api.md`
 **Requires:** Ads developer token + customer ID in config (Tier 3).
 
 ### `/seo google volume <keywords>`
@@ -266,18 +266,18 @@ Search volume for specific keywords (comma-separated).
 
 Knowledge Graph entity check. Verifies brand presence.
 
-**Reference:** `references/supplementary-apis.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/supplementary-apis.md`
 Uses Knowledge Graph Search API with API key.
 
 ### `/seo google safety <url>`
 
 Web Risk API check for malware/social engineering flags.
 
-**Reference:** `references/supplementary-apis.md`
+**Reference:** `~/.local/share/omp-seo/skills/seo-google/references/supplementary-apis.md`
 
 ### `/seo google quotas`
 
-Display rate limits table. Read `references/rate-limits-quotas.md`.
+Display rate limits table. Read `~/.local/share/omp-seo/skills/seo-google/references/rate-limits-quotas.md`.
 
 ---
 

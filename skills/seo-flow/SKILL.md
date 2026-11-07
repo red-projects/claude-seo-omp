@@ -11,7 +11,7 @@ be driven by structured, evidence-backed AI prompts rather than improvised queri
 
 > Framework and prompts © Daniel Agrici, CC BY 4.0: github.com/AgriciDaniel/flow
 
-**Runtime context:** Load `references/flow-framework.md` on every `/seo flow` activation.
+**Runtime context:** Load `~/.local/share/omp-seo/skills/seo-flow/references/flow-framework.md` on every `/seo flow` activation.
 Load prompt files on demand, only for the stage the user requests.
 
 ---
@@ -34,7 +34,7 @@ Load prompt files on demand, only for the stage the user requests.
 ## Orchestration Logic
 
 ### On `/seo flow` (no sub-command)
-1. Read `references/flow-framework.md`
+1. Read `~/.local/share/omp-seo/skills/seo-flow/references/flow-framework.md`
 2. Show the FLOW stage overview with a one-line description of each stage
 3. Ask: which stage matches the user's current situation?
 
@@ -91,8 +91,8 @@ Always surface exactly 2-3 prompts. State which prompts you chose and why.
 ## Reference Files
 
 Load on-demand, do NOT load all at startup:
-- `references/flow-framework.md`: FLOW operating model (load on every `/seo flow` activation)
-- `references/bibliography.md`: Evidence sources; load when citing studies or statistics
+- `~/.local/share/omp-seo/skills/seo-flow/references/flow-framework.md`: FLOW operating model (load on every `/seo flow` activation)
+- `~/.local/share/omp-seo/skills/seo-flow/references/bibliography.md`: Evidence sources; load when citing studies or statistics
 - `references/prompts/README.md`: Prompt index; load for `/seo flow prompts`
 - `references/prompts/find/`: 5 prompts; load for `/seo flow find`
 - `references/prompts/leverage/`: 1 prompt; load for `/seo flow leverage`
@@ -118,7 +118,7 @@ Do not omit or modify the attribution.
 
 | Scenario | Action |
 |----------|--------|
-| `references/flow-framework.md` missing | "FLOW reference files not synced. Run: `/seo flow sync`" |
+| `~/.local/share/omp-seo/skills/seo-flow/references/flow-framework.md` missing | "FLOW reference files not synced. Run: `/seo flow sync`" |
 | Prompt file missing | "Run `/seo flow sync` to pull the latest prompts from the FLOW repo." |
 | `sync_flow.py` network error | Display the script's stderr. Check rate limits: `gh api rate_limit`. |
 | `sync_flow.py` auth error | Run `gh auth login` then retry. |

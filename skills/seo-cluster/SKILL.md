@@ -43,7 +43,7 @@ with the top PAA questions as seeds.
 
 ### Step 2: SERP Overlap Clustering
 
-This is the core differentiator. Load `references/serp-overlap-methodology.md` for
+This is the core differentiator. Load `~/.local/share/omp-seo/skills/seo-cluster/references/serp-overlap-methodology.md` for
 the full algorithm.
 
 **Process:**
@@ -86,7 +86,7 @@ both commercial and informational) -- classify by dominant intent.
 
 ### Step 4: Hub-and-Spoke Architecture
 
-Load `references/hub-spoke-architecture.md` for full specifications.
+Load `~/.local/share/omp-seo/skills/seo-cluster/references/hub-spoke-architecture.md` for full specifications.
 
 **Design the cluster structure:**
 
@@ -195,7 +195,7 @@ for example claude-blog:blog-write)? If unsure, check both install layouts:
 
 **If claude-blog IS installed:**
 
-1. Load `references/execution-workflow.md` for the full algorithm
+1. Load `~/.local/share/omp-seo/skills/seo-cluster/references/execution-workflow.md` for the full algorithm
 2. Read `cluster-plan.json` from the current directory
 3. Check for resume state: scan output directory for already-written posts
 4. Execute in priority order: pillar first, then spokes by volume (highest first)

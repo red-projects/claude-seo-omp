@@ -6,6 +6,8 @@ Adapts skills/*/SKILL.md frontmatter and launcher paths for OMP runtime compatib
 - Replaces frontmatter with strictly {name, description} (<=300 bytes UTF-8).
 - Rewrites Claude Code launcher references and preambles to canonical OMP `omp-seo-run`.
 - Cleans installer and manual path notes ($HOME/.claude, ./scripts/claude-seo).
+- Rewrites every `references/<file>.md` link to an absolute canonical skill path.
+- Replaces Claude Code subagent delegation with inline specialist-module execution.
 - Fully idempotent: running multiple times produces 0 changes.
 """
 
@@ -43,6 +45,44 @@ SKILL_DESCRIPTIONS = {
     "seo-sxo": "Search Experience Optimization: объединение поисковой оптимизации и удобства интерфейса (UX, микроконверсии, читаемость).",
     "seo-technical": "Глубокий технический аудит: краулинг, индексация, robots.txt, HTTP-коды, каноникалы, редиректы, JS-рендеринг."
 }
+
+
+CANONICAL_SKILLS_ROOT = "~/.local/share/omp-seo/skills"
+
+# Match reference links: bare (`references/x.md`), relative (`../seo/references/x.md`),
+# or already canonical (`~/.local/share/omp-seo/skills/<mod>/references/x.md`).
+REFERENCE_PATTERN = re.compile(
+    r"(?<![\w./~-])"
+    r"("
+    r"(?:[^\s`\"'()\[\]<>]*/)?references/([a-zA-Z0-9_-]+\.md)"
+    r")"
+)
+
+
+def rewrite_references(content: str, skill_name: str, skills_dir: Path) -> str:
+    """Rewrite relative reference links to deterministic canonical paths."""
+    def repl(m: re.Match) -> str:
+        full_tok = m.group(1)
+        ref_file = m.group(2)
+
+        # If already canonical, verify the target file exists. If so, return unmodified.
+        if full_tok.startswith(f"{CANONICAL_SKILLS_ROOT}/"):
+            subpath = full_tok[len(CANONICAL_SKILLS_ROOT) + 1:]
+            if (skills_dir / subpath).is_file():
+                return full_tok
+
+        # Check in the skill's own references directory
+        if (skills_dir / skill_name / "references" / ref_file).is_file():
+            return f"{CANONICAL_SKILLS_ROOT}/{skill_name}/references/{ref_file}"
+
+        # Otherwise check in seo references directory
+        if (skills_dir / "seo" / "references" / ref_file).is_file():
+            return f"{CANONICAL_SKILLS_ROOT}/seo/references/{ref_file}"
+
+        # Keep original token if target cannot be resolved
+        return full_tok
+
+    return REFERENCE_PATTERN.sub(repl, content)
 
 
 def adapt_skill(skill_file: Path) -> bool:
@@ -92,6 +132,13 @@ def adapt_skill(skill_file: Path) -> bool:
         flags=re.DOTALL,
     )
 
+    # Clarify Claude Code subagent delegation phrasing for OMP runtime
+    body = re.sub(
+        r"(\*\*)?Delegate to subagents(\*\*)?\s*\(if available, otherwise run inline sequentially\):",
+        r"\1Execute specialist modules inline sequentially\2 (read ~/.local/share/omp-seo/skills/<module>/SKILL.md as needed):",
+        body,
+    )
+
     # Canonical path and invocation replacements (ordered specific to general)
     body = body.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run ', "omp-seo-run ")
     body = body.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo run ", "omp-seo-run ")
@@ -101,6 +148,10 @@ def adapt_skill(skill_file: Path) -> bool:
     body = body.replace('"$HOME/.claude/skills/', "omp-seo-run")
     body = body.replace("$HOME/.claude/skills/", "omp-seo-run")
     body = body.replace("./scripts/claude-seo", "omp-seo-run")
+
+    # Canonicalize reference links
+    skills_dir = skill_file.resolve().parent.parent
+    body = rewrite_references(body, name, skills_dir)
 
     new_content = new_frontmatter + body
 
