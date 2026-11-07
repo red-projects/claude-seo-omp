@@ -3,26 +3,34 @@ set -euo pipefail
 
 # Link OMP SEO skills into a target project workspace
 # Usage:
-#   bash omp/link_project.sh core <project_dir>
-#   bash omp/link_project.sh all <project_dir>
+#   bash omp/link_project.sh core <project_dir> [--claude]
+#   bash omp/link_project.sh all <project_dir> [--claude]
+#
+# Default target: <project_dir>/.omp/skills (OMP Skill Layer Routing Policy)
+# Pass --claude to link into <project_dir>/.claude/skills
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 if [[ $# -lt 2 ]]; then
-    echo "Usage: $0 <core|all> <project_dir>" >&2
+    echo "Usage: $0 <core|all> <project_dir> [--claude]" >&2
     exit 1
 fi
 
 MODE="$1"
 PROJECT_DIR="$(readlink -f "$2")"
 
+TARGET_SUBDIR=".omp/skills"
+if [[ "${3:-}" == "--claude" ]]; then
+    TARGET_SUBDIR=".claude/skills"
+fi
+
 if [[ ! -d "${PROJECT_DIR}" ]]; then
     echo "Error: target project directory does not exist: ${PROJECT_DIR}" >&2
     exit 1
 fi
 
-TARGET_SKILLS_DIR="${PROJECT_DIR}/.claude/skills"
+TARGET_SKILLS_DIR="${PROJECT_DIR}/${TARGET_SUBDIR}"
 mkdir -p "${TARGET_SKILLS_DIR}"
 
 CORE_SKILLS=(
