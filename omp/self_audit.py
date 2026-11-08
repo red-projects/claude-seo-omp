@@ -22,6 +22,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -141,10 +142,11 @@ def check_skill_byte_counts() -> dict:
 
 def check_adapt_idempotency() -> dict:
     skills_dir = REPO_ROOT / "skills"
-    skill_files = sorted(skills_dir.glob("*/SKILL.md"))
+    refs_dir = REPO_ROOT / "omp" / "references"
+    tracked_files = sorted(skills_dir.glob("*/SKILL.md")) + sorted(refs_dir.glob("*/references/**/*.md"))
 
     hashes_before = {
-        sf.name: hashlib.sha256(sf.read_bytes()).hexdigest() for sf in skill_files
+        str(f.relative_to(REPO_ROOT)): hashlib.sha256(f.read_bytes()).hexdigest() for f in tracked_files if f.is_file()
     }
 
     res = subprocess.run([sys.executable, str(REPO_ROOT / "omp" / "adapt.py")], cwd=REPO_ROOT, capture_output=True, text=True)
@@ -152,14 +154,13 @@ def check_adapt_idempotency() -> dict:
         return {"status": "FAIL", "detail": f"omp/adapt.py failed: {res.stderr}"}
 
     hashes_after = {
-        sf.name: hashlib.sha256(sf.read_bytes()).hexdigest() for sf in skill_files
+        str(f.relative_to(REPO_ROOT)): hashlib.sha256(f.read_bytes()).hexdigest() for f in tracked_files if f.is_file()
     }
 
     if hashes_before != hashes_after:
-        return {"status": "FAIL", "detail": "SKILL.md hashes changed on re-run (not idempotent)"}
+        return {"status": "FAIL", "detail": "Skill or reference hashes changed on re-run (not idempotent)"}
 
-    return {"status": "PASS", "detail": "Re-running adapt.py produced 0 file modifications"}
-
+    return {"status": "PASS", "detail": f"Re-running adapt.py produced 0 file modifications across {len(tracked_files)} files"}
 
 def check_probe_a() -> dict:
     runner = get_runner()
@@ -228,6 +229,42 @@ def check_symlink_active() -> dict:
         return {"status": "FAIL", "detail": f"{SYMLINK_PATH} is not executable"}
     return {"status": "PASS", "detail": f"Active symlink {SYMLINK_PATH} -> {target}"}
 
+def check_adapted_links_and_commands() -> dict:
+    refs_dir = REPO_ROOT / "omp" / "references"
+    skills_dir = REPO_ROOT / "skills"
+    justfile_text = (REPO_ROOT / "Justfile").read_text(encoding="utf-8")
+
+    canonical_disk_link_re = re.compile(r"~/\.local/share/omp-seo/([^\s`\"'()\[\]<>]+)")
+    bad_cmd_re = re.compile(r"omp-seo-run\s+(setup|doctor|run)(?:\s+|$|`|\")")
+
+    broken_links = []
+    for rf in sorted(refs_dir.glob("*/references/**/*.md")):
+        text = rf.read_text(encoding="utf-8")
+        for m in canonical_disk_link_re.finditer(text):
+            target = REPO_ROOT / m.group(1)
+            if not target.exists():
+                broken_links.append((str(rf.relative_to(REPO_ROOT)), m.group(0)))
+
+    if broken_links:
+        return {"status": "FAIL", "detail": f"Broken links in adapted docs: {broken_links}"}
+
+    broken_cmds = []
+    for sf in sorted(skills_dir.glob("*/SKILL.md")):
+        text = sf.read_text(encoding="utf-8")
+        m = bad_cmd_re.search(text)
+        if m:
+            broken_cmds.append((sf.parent.name, m.group(0).strip()))
+
+    if broken_cmds:
+        return {"status": "FAIL", "detail": f"Broken runner commands in skills: {broken_cmds}"}
+
+    # Verify execution from /tmp
+    res_just = subprocess.run(["just", "-d", str(REPO_ROOT), "--list"], cwd="/tmp", capture_output=True, text=True)
+    if res_just.returncode != 0:
+        return {"status": "FAIL", "detail": f"just -d from /tmp failed: {res_just.stderr}"}
+
+    return {"status": "PASS", "detail": "All adapted links exist on disk and commands valid from /tmp"}
+
 
 def main() -> int:
     checks = [
@@ -236,6 +273,7 @@ def main() -> int:
         ("upstream_zero_diff", check_zero_diff_upstream),
         ("skill_byte_budget", check_skill_byte_counts),
         ("adapt_idempotency", check_adapt_idempotency),
+        ("adapted_links_and_commands", check_adapted_links_and_commands),
         ("falsification_probe_a", check_probe_a),
         ("falsification_probe_b", check_probe_b),
         ("falsification_probe_c", check_probe_c),
@@ -249,7 +287,6 @@ def main() -> int:
         "results": {},
         "summary": {"total": len(checks), "passed": 0, "failed": 0},
     }
-
     all_passed = True
     print("=== OMP SEO Self-Audit Run ===")
     for check_id, func in checks:

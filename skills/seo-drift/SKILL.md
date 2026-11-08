@@ -44,7 +44,7 @@ Every baseline records these SEO-critical elements:
 ## How Comparison Works
 
 The comparison engine applies **17 rules across 3 severity levels**. Load
-`~/.local/share/omp-seo/skills/seo-drift/references/comparison-rules.md` for the full rule set with thresholds,
+`~/.local/share/omp-seo/omp/references/seo-drift/references/comparison-rules.md` for the full rule set with thresholds,
 recommended actions, and cross-skill references.
 
 ### Severity Levels

@@ -54,12 +54,12 @@ extension is also installable (see "Optional Extensions" below).
 
 Run setup only when the user explicitly invokes `/seo setup` or explicitly asks
 to repair dependencies. Execute
-`omp-seo-run setup`, report core and Chromium
+`just -d ~/.local/share/omp-seo setup`, report core and Chromium
 status separately, and do not fall back to global or user package installation.
 For diagnosis, execute
-`omp-seo-run doctor --json`; its output
+`just -d ~/.local/share/omp-seo test`; its output
 intentionally omits absolute paths and environment values. If any
-`omp-seo-run run` command reports that setup is
+`omp-seo-run` command reports that setup is
 required, suggest `/seo setup` and do not improvise a `pip install`.
 
 ## Orchestration Logic
@@ -107,7 +107,7 @@ least THINK + ACCEPT before emitting (sound first principle, surfaced
 falsifiability). The Critical / High / Medium / Low priority buckets are the
 **output** of validation, not a substitute for it.
 
-Full methodology + per-principle SEO mapping: `~/.local/share/omp-seo/skills/seo/references/thinking-framework.md` (VALIDATE and ACT in `~/.local/share/omp-seo/skills/seo/references/thinking-framework-validate-act.md`).
+Full methodology + per-principle SEO mapping: `~/.local/share/omp-seo/omp/references/seo/references/thinking-framework.md` (VALIDATE and ACT in `~/.local/share/omp-seo/omp/references/seo/references/thinking-framework-validate-act.md`).
 
 Each emitted recommendation should carry:
 - The first-principle observation it rests on (THINK)
@@ -126,7 +126,7 @@ Detect business type from homepage signals:
 
 ## Quality Gates
 
-Read `~/.local/share/omp-seo/skills/seo/references/quality-gates.md` for thin content thresholds per page type.
+Read `~/.local/share/omp-seo/omp/references/seo/references/quality-gates.md` for thin content thresholds per page type.
 Hard rules:
 - WARNING at 30+ location pages (enforce 60%+ unique content)
 - HARD STOP at 50+ location pages (require user justification)
@@ -182,18 +182,18 @@ Do NOT show the footer after:
 ## Reference Files
 
 Load these on-demand as needed (do NOT load all at startup):
-- `~/.local/share/omp-seo/skills/seo/references/cwv-thresholds.md`: Current Core Web Vitals thresholds and measurement details
-- `~/.local/share/omp-seo/skills/seo/references/schema-types.md`: All supported schema types with deprecation status
-- `~/.local/share/omp-seo/skills/seo/references/eeat-framework.md`: E-E-A-T evaluation criteria (Sept 2025 QRG update)
-- `~/.local/share/omp-seo/skills/seo/references/eeat-scoring-guide.md`: E-E-A-T score bands and improvement actions
-- `~/.local/share/omp-seo/skills/seo/references/quality-gates.md`: Content length minimums, uniqueness thresholds
-- `~/.local/share/omp-seo/skills/seo/references/local-seo-signals.md`: Local ranking factors, review benchmarks, citation tiers, GBP status
-- `~/.local/share/omp-seo/skills/seo/references/local-search-behavior.md`: Voice, AI search impact on local, Local Pack structure, proximity
-- `~/.local/share/omp-seo/skills/seo/references/local-schema-types.md`: LocalBusiness subtypes, industry-specific schema and citation sources
-- `~/.local/share/omp-seo/skills/seo/references/local-schema-multilocation.md`: Multi-location schema pattern, deprecated local schema
+- `~/.local/share/omp-seo/omp/references/seo/references/cwv-thresholds.md`: Current Core Web Vitals thresholds and measurement details
+- `~/.local/share/omp-seo/omp/references/seo/references/schema-types.md`: All supported schema types with deprecation status
+- `~/.local/share/omp-seo/omp/references/seo/references/eeat-framework.md`: E-E-A-T evaluation criteria (Sept 2025 QRG update)
+- `~/.local/share/omp-seo/omp/references/seo/references/eeat-scoring-guide.md`: E-E-A-T score bands and improvement actions
+- `~/.local/share/omp-seo/omp/references/seo/references/quality-gates.md`: Content length minimums, uniqueness thresholds
+- `~/.local/share/omp-seo/omp/references/seo/references/local-seo-signals.md`: Local ranking factors, review benchmarks, citation tiers, GBP status
+- `~/.local/share/omp-seo/omp/references/seo/references/local-search-behavior.md`: Voice, AI search impact on local, Local Pack structure, proximity
+- `~/.local/share/omp-seo/omp/references/seo/references/local-schema-types.md`: LocalBusiness subtypes, industry-specific schema and citation sources
+- `~/.local/share/omp-seo/omp/references/seo/references/local-schema-multilocation.md`: Multi-location schema pattern, deprecated local schema
 
 Maps-specific references (loaded by seo-maps skill, not at startup):
-- `~/.local/share/omp-seo/skills/seo/references/maps-geo-grid.md`, `~/.local/share/omp-seo/skills/seo/references/maps-gbp-checklist.md`, `~/.local/share/omp-seo/skills/seo/references/maps-api-endpoints.md`, `~/.local/share/omp-seo/skills/seo/references/maps-free-apis.md`
+- `~/.local/share/omp-seo/omp/references/seo/references/maps-geo-grid.md`, `~/.local/share/omp-seo/omp/references/seo/references/maps-gbp-checklist.md`, `~/.local/share/omp-seo/omp/references/seo/references/maps-api-endpoints.md`, `~/.local/share/omp-seo/omp/references/seo/references/maps-free-apis.md`
 
 ## Scoring Methodology
 

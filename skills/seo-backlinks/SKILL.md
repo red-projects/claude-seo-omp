@@ -113,7 +113,7 @@ Analyze:
 - Links from thin content pages (<100 words)
 - Excessive links from a single domain (>50 backlinks from 1 domain)
 
-Load `~/.local/share/omp-seo/skills/seo/references/backlink-quality.md` for the full 30 toxic patterns and disavow criteria.
+Load `~/.local/share/omp-seo/omp/references/seo/references/backlink-quality.md` for the full 30 toxic patterns and disavow criteria.
 
 ### 5. Top Pages by Backlinks
 
@@ -291,8 +291,8 @@ After completing any backlink analysis command, always offer:
 ## Reference Documentation
 
 Load on demand (do NOT load at startup):
-- `~/.local/share/omp-seo/skills/seo/references/backlink-quality.md` -- Detailed toxic link patterns and scoring methodology (shared reference, load when analyzing toxic links or spam scores)
-- `~/.local/share/omp-seo/skills/seo/references/free-backlink-sources.md` -- Source comparison, confidence weighting, setup guides (shared reference, load when configuring free backlink APIs)
+- `~/.local/share/omp-seo/omp/references/seo/references/backlink-quality.md` -- Detailed toxic link patterns and scoring methodology (shared reference, load when analyzing toxic links or spam scores)
+- `~/.local/share/omp-seo/omp/references/seo/references/free-backlink-sources.md` -- Source comparison, confidence weighting, setup guides (shared reference, load when configuring free backlink APIs)
 
 ## Security
 

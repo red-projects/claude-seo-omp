@@ -108,9 +108,10 @@ def run_gate2() -> bool:
 def run_gate3() -> bool:
     print("--- Gate 3: Clean Paths & Upstream Code Integrity ---")
     skills_dir = REPO_ROOT / "skills"
-    canonical_prefix = "~/.local/share/omp-seo/skills/"
+    refs_dir = REPO_ROOT / "omp" / "references"
+    canonical_prefix = "~/.local/share/omp-seo/omp/references/"
     canonical_pattern = re.compile(
-        r"~/\.local/share/omp-seo/skills/([a-z0-9-]+)/references/([a-zA-Z0-9_-]+\.md)"
+        r"~/\.local/share/omp-seo/(?:omp/references|skills)/([a-z0-9-]+)/references/([a-zA-Z0-9_-]+\.md)"
     )
     ref_pattern = re.compile(
         r"(?<![\w./~-])((?:[^\s`\"'()\[\]<>]*/)?references/[a-zA-Z0-9_-]+\.md)"
@@ -132,7 +133,7 @@ def run_gate3() -> bool:
         # 1. Verify no bare relative `references/` remains without canonical prefix
         for m in ref_pattern.finditer(content):
             tok = m.group(1)
-            if not tok.startswith(canonical_prefix):
+            if not (tok.startswith(canonical_prefix) or tok.startswith("~/.local/share/omp-seo/skills/")):
                 print(f"FAIL: Bare relative reference '{tok}' found in {sf}")
                 return False
 
@@ -140,7 +141,10 @@ def run_gate3() -> bool:
         for m in canonical_pattern.finditer(content):
             mod = m.group(1)
             ref_file = m.group(2)
-            target = skills_dir / mod / "references" / ref_file
+            if "omp/references" in m.group(0):
+                target = refs_dir / mod / "references" / ref_file
+            else:
+                target = skills_dir / mod / "references" / ref_file
             if not target.is_file():
                 print(
                     f"FAIL: Canonical reference '{m.group(0)}' in {sf} points to missing target: {target}"
@@ -148,6 +152,66 @@ def run_gate3() -> bool:
                 return False
             total_canonical_refs += 1
 
+    # 3. Verify zero unresolved CLAUDE_PLUGIN_ROOT and valid disk targets for all links in adapted docs
+    adapted_ref_files = sorted(refs_dir.glob("*/references/**/*.md"))
+    if not adapted_ref_files:
+        print(f"FAIL: No adapted reference files found in {refs_dir}")
+        return False
+
+    canonical_disk_link_re = re.compile(r"~/\.local/share/omp-seo/([^\s`\"'()\[\]<>]+)")
+    commands_to_test = set()
+    cmd_re = re.compile(r"omp-seo-run\s+([a-zA-Z0-9_.-]+\.py)")
+
+    for rf in adapted_ref_files:
+        text = rf.read_text(encoding="utf-8")
+        if "${CLAUDE_PLUGIN_ROOT}" in text:
+            print(f"FAIL: Found unresolved ${{CLAUDE_PLUGIN_ROOT}} in adapted doc {rf}")
+            return False
+        for m in cmd_re.finditer(text):
+            commands_to_test.add(m.group(1))
+        for m in canonical_disk_link_re.finditer(text):
+            target_rel = m.group(1)
+            target_path = REPO_ROOT / target_rel
+            if not target_path.exists():
+                print(f"FAIL: Link '{m.group(0)}' in adapted doc {rf} points to nonexistent target: {target_path}")
+                return False
+
+    # 4. Verify no broken dispatcher commands in skills (setup/doctor/run must not be invoked via omp-seo-run)
+    bad_dispatcher_re = re.compile(r"omp-seo-run\s+(setup|doctor|run)(?:\s+|$|`|\")")
+    just_cmd_re = re.compile(r"just\s+-d\s+~/\.local/share/omp-seo\s+([a-zA-Z0-9_-]+)")
+    justfile_text = (REPO_ROOT / "Justfile").read_text(encoding="utf-8")
+
+    for sf in sorted(skills_dir.glob("*/SKILL.md")):
+        content = sf.read_text(encoding="utf-8")
+        bad_match = bad_dispatcher_re.search(content)
+        if bad_match:
+            print(f"FAIL: Invalid runner command 'omp-seo-run {bad_match.group(1)}' found in {sf}")
+            return False
+        for m in just_cmd_re.finditer(content):
+            recipe = m.group(1)
+            if f"{recipe}:" not in justfile_text and f"{recipe} " not in justfile_text:
+                print(f"FAIL: Referenced recipe '{recipe}' in {sf} does not exist in Justfile")
+                return False
+
+    # 5. Verify concrete command resolution from external CWD (/tmp)
+    runner = get_runner_bin()
+    for cmd_script in sorted(commands_to_test):
+        script_file = REPO_ROOT / "scripts" / cmd_script
+        if not script_file.is_file():
+            print(f"FAIL: Script '{cmd_script}' referenced in adapted docs does not exist on disk: {script_file}")
+            return False
+        res_cmd = subprocess.run([runner, cmd_script, "--help"], cwd="/tmp", capture_output=True, text=True)
+        if res_cmd.returncode != 0:
+            print(f"FAIL: Command '{runner} {cmd_script} --help' failed from /tmp with code {res_cmd.returncode}:\n{res_cmd.stderr}")
+            return False
+
+    # Test executing just recipes from external CWD (/tmp)
+    res_just = subprocess.run(["just", "-d", str(REPO_ROOT), "--list"], cwd="/tmp", capture_output=True, text=True)
+    if res_just.returncode != 0:
+        print(f"FAIL: 'just -d {REPO_ROOT} --list' failed from /tmp: {res_just.stderr}")
+        return False
+
+    # 6. Upstream Code & Pristine References Invariant
     cmd = ["git", "diff", "v2.5.0", "--stat", "--", "scripts/", "hooks/", "skills/seo/references/"]
     res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True)
     if res.returncode != 0:
@@ -158,8 +222,10 @@ def run_gate3() -> bool:
         return False
 
     print(
-        f"PASS: Clean paths, {total_canonical_refs} canonical references verified on disk, "
-        "and 0-line diff against v2.5.0 on protected upstream paths"
+        f"PASS: Clean paths, {total_canonical_refs} canonical references verified, "
+        f"{len(adapted_ref_files)} adapted reference docs verified (all links exist, 0 CLAUDE_PLUGIN_ROOT), "
+        f"{len(commands_to_test)} CLI commands verified executable from /tmp, "
+        "valid Justfile recipes verified from /tmp, and 0-line diff against v2.5.0 on protected upstream paths"
     )
     return True
 

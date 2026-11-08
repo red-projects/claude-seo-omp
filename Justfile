@@ -36,15 +36,9 @@ test:
 self-audit:
     python3 omp/self_audit.py
 
-# Sync and verify merge from upstream tag
+# Safely fetch upstream tag or branch, merge into current branch, adapt and verify
 sync-upstream tag="v2.5.0":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    git fetch upstream --tags
-    git merge --no-edit "{{tag}}"
-    python3 omp/adapt.py
-    python3 omp/verify.py
-    python3 omp/self_audit.py
+    bash omp/sync-upstream.sh "{{tag}}"
 
 # Link core skills into target project
 link-core project_dir:

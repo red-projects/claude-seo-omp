@@ -48,9 +48,71 @@ SKILL_DESCRIPTIONS = {
 
 
 CANONICAL_SKILLS_ROOT = "~/.local/share/omp-seo/skills"
+CANONICAL_REFS_ROOT = "~/.local/share/omp-seo/omp/references"
+
+def canonicalize_runtime_refs(content: str) -> str:
+    """Canonicalize command invocations and paths to OMP runtime standards."""
+    # 1. Map setup and doctor to actual Justfile recipes
+    content = content.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" setup', "just -d ~/.local/share/omp-seo setup")
+    content = content.replace('${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo setup', "just -d ~/.local/share/omp-seo setup")
+    content = content.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" doctor --json', "just -d ~/.local/share/omp-seo test")
+    content = content.replace('${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo doctor --json', "just -d ~/.local/share/omp-seo test")
+    content = content.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" doctor', "just -d ~/.local/share/omp-seo test")
+    content = content.replace('${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo doctor', "just -d ~/.local/share/omp-seo test")
+    content = content.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run ', "omp-seo-run ")
+    content = content.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo run ", "omp-seo-run ")
+    content = content.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run', "omp-seo-run")
+    content = content.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo run", "omp-seo-run")
+    content = content.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo"', "omp-seo-run")
+    content = content.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo", "omp-seo-run")
+
+    # Clean up any preexisting artifacts in working tree
+    content = content.replace("`omp-seo-run run`", "`omp-seo-run`")
+    content = content.replace("omp-seo-run setup", "just -d ~/.local/share/omp-seo setup")
+    content = content.replace("omp-seo-run doctor --json", "just -d ~/.local/share/omp-seo test")
+    content = content.replace("omp-seo-run doctor", "just -d ~/.local/share/omp-seo test")
+    content = content.replace("omp-seo-run run command", "omp-seo-run command")
+    content = content.replace("omp-seo-run run ", "omp-seo-run ")
+    content = content.replace("omp-seo-run run", "omp-seo-run")
+
+    # 2. Only map skills/<skill>/references/ to CANONICAL_REFS_ROOT.
+    # Non-references paths (e.g. skills/<skill>/SKILL.md) map to CANONICAL_SKILLS_ROOT.
+    content = re.sub(
+        r"\$\{CLAUDE_PLUGIN_ROOT\}/skills/([a-zA-Z0-9_-]+)/references/",
+        rf"{CANONICAL_REFS_ROOT}/\1/references/",
+        content,
+    )
+    content = content.replace("${CLAUDE_PLUGIN_ROOT}/skills/", f"{CANONICAL_SKILLS_ROOT}/")
+    content = content.replace("${CLAUDE_PLUGIN_ROOT}", "~/.local/share/omp-seo")
+    content = content.replace('"$HOME/.claude/skills/', "omp-seo-run")
+    content = content.replace("$HOME/.claude/skills/", "omp-seo-run")
+    content = content.replace("./scripts/claude-seo", "omp-seo-run")
+    return content
+
+
+def adapt_references(repo_root: Path) -> int:
+    """Generate pristine-preserving adapted copies of reference files under omp/references/."""
+    skills_dir = repo_root / "skills"
+    refs_out_dir = repo_root / "omp" / "references"
+    changed = 0
+
+    for ref_file in sorted(skills_dir.glob("*/references/**/*.md")):
+        rel = ref_file.relative_to(skills_dir)
+        target = refs_out_dir / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+
+        original = ref_file.read_text(encoding="utf-8")
+        adapted = canonicalize_runtime_refs(original)
+
+        if not target.is_file() or target.read_text(encoding="utf-8") != adapted:
+            target.write_text(adapted, encoding="utf-8")
+            changed += 1
+
+    return changed
+
 
 # Match reference links: bare (`references/x.md`), relative (`../seo/references/x.md`),
-# or already canonical (`~/.local/share/omp-seo/skills/<mod>/references/x.md`).
+# or already canonical (`~/.local/share/omp-seo/...`).
 REFERENCE_PATTERN = re.compile(
     r"(?<![\w./~-])"
     r"("
@@ -59,31 +121,30 @@ REFERENCE_PATTERN = re.compile(
 )
 
 
-def rewrite_references(content: str, skill_name: str, skills_dir: Path) -> str:
-    """Rewrite relative reference links to deterministic canonical paths."""
+def rewrite_references(content: str, skill_name: str, repo_root: Path) -> str:
+    """Rewrite relative reference links to deterministic canonical paths in omp/references/."""
+    skills_dir = repo_root / "skills"
+    refs_dir = repo_root / "omp" / "references"
+
     def repl(m: re.Match) -> str:
         full_tok = m.group(1)
         ref_file = m.group(2)
 
-        # If already canonical, verify the target file exists. If so, return unmodified.
-        if full_tok.startswith(f"{CANONICAL_SKILLS_ROOT}/"):
-            subpath = full_tok[len(CANONICAL_SKILLS_ROOT) + 1:]
-            if (skills_dir / subpath).is_file():
-                return full_tok
+        # Route to adapted copy under omp/references if present
+        if (refs_dir / skill_name / "references" / ref_file).is_file():
+            return f"{CANONICAL_REFS_ROOT}/{skill_name}/references/{ref_file}"
+        if (refs_dir / "seo" / "references" / ref_file).is_file():
+            return f"{CANONICAL_REFS_ROOT}/seo/references/{ref_file}"
 
-        # Check in the skill's own references directory
+        # Fallback to skills_dir
         if (skills_dir / skill_name / "references" / ref_file).is_file():
             return f"{CANONICAL_SKILLS_ROOT}/{skill_name}/references/{ref_file}"
-
-        # Otherwise check in seo references directory
         if (skills_dir / "seo" / "references" / ref_file).is_file():
             return f"{CANONICAL_SKILLS_ROOT}/seo/references/{ref_file}"
 
-        # Keep original token if target cannot be resolved
         return full_tok
 
     return REFERENCE_PATTERN.sub(repl, content)
-
 
 def adapt_skill(skill_file: Path) -> bool:
     name = skill_file.parent.name
@@ -139,19 +200,12 @@ def adapt_skill(skill_file: Path) -> bool:
         body,
     )
 
-    # Canonical path and invocation replacements (ordered specific to general)
-    body = body.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo" run ', "omp-seo-run ")
-    body = body.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo run ", "omp-seo-run ")
-    body = body.replace('"${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo"', "omp-seo-run")
-    body = body.replace("${CLAUDE_PLUGIN_ROOT}/scripts/claude-seo", "omp-seo-run")
-    body = body.replace("${CLAUDE_PLUGIN_ROOT}", "~/.local/share/omp-seo")
-    body = body.replace('"$HOME/.claude/skills/', "omp-seo-run")
-    body = body.replace("$HOME/.claude/skills/", "omp-seo-run")
-    body = body.replace("./scripts/claude-seo", "omp-seo-run")
+    # Canonical path and invocation replacements
+    body = canonicalize_runtime_refs(body)
 
-    # Canonicalize reference links
-    skills_dir = skill_file.resolve().parent.parent
-    body = rewrite_references(body, name, skills_dir)
+    # Canonicalize reference links into omp/references/
+    repo_root = skill_file.resolve().parent.parent.parent
+    body = rewrite_references(body, name, repo_root)
 
     new_content = new_frontmatter + body
 
@@ -165,6 +219,8 @@ def main() -> int:
     repo_root = Path(__file__).resolve().parent.parent
     skills_dir = repo_root / "skills"
 
+    refs_changed = adapt_references(repo_root)
+
     skill_files = sorted(skills_dir.glob("*/SKILL.md"))
     if len(skill_files) != 26:
         print(f"Error: expected 26 skills, found {len(skill_files)}", file=sys.stderr)
@@ -175,7 +231,8 @@ def main() -> int:
         if adapt_skill(sf):
             changed_count += 1
 
-    print(f"Adapted {len(skill_files)} skills. Changed: {changed_count} files.")
+    ref_count = len(sorted((repo_root / "omp" / "references").glob("*/references/**/*.md")))
+    print(f"Adapted {len(skill_files)} skills and {ref_count} references. Changed: {changed_count} skills, {refs_changed} references.")
     return 0
 
 

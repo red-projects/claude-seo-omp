@@ -22,7 +22,7 @@ only ChatGPT desktop calls tools by default).
 | `/seo agentic <url>` | Full agent-readiness audit (default mode) |
 | `/seo agentic lighthouse <url or file.json>` | Explain the Lighthouse Agentic Browsing X/N result |
 | `/seo agentic fix <url>` | Draft fixes: robots.txt Content-Signal, llms.txt, ai-catalog.json, WebMCP |
-| `/seo agentic refresh` | Re-verify the dated facts in `~/.local/share/omp-seo/skills/seo-agentic/references/vendor-matrix.md` |
+| `/seo agentic refresh` | Re-verify the dated facts in `~/.local/share/omp-seo/omp/references/seo-agentic/references/vendor-matrix.md` |
 
 ## Audit process
 
@@ -34,7 +34,7 @@ Run the steps in this order and keep every tool's JSON for the report.
    shared anonymous quota. With a saved report use `--from-json <file>`.
    Report the fraction as `X/N` exactly as computed. Never convert it to a
    percentage and never assume N: it is at most 6, and N/A and informative
-   audits drop out. Read `~/.local/share/omp-seo/skills/seo-agentic/references/lighthouse-agentic-category.md` before explaining it.
+   audits drop out. Read `~/.local/share/omp-seo/omp/references/seo-agentic/references/lighthouse-agentic-category.md` before explaining it.
 2. **HTTP and markup checks.**
    `omp-seo-run agentic_check.py <url> --json`.
    Covers server-rendered content, robots.txt groups per AI agent and
@@ -43,12 +43,12 @@ Run the steps in this order and keep every tool's JSON for the report.
 3. **Accessibility tree.**
    `omp-seo-run agent_ux_check.py <url> --json`.
    A local 0-100 heuristic; present it separately from the Lighthouse fraction.
-   Page-level criteria: `~/.local/share/omp-seo/skills/seo-agentic/references/agent-friendly-pages.md`.
+   Page-level criteria: `~/.local/share/omp-seo/omp/references/seo-agentic/references/agent-friendly-pages.md`.
 4. **WAF behaviour (only with authorization).** Add `--ua-matrix` to step 2
    only when the user controls the site or confirms they are authorized to
    test it: it sends requests carrying AI agents' user-agent tokens. Treat the
    result as behaviour toward **unverified** traffic, never as proof that the
-   real agent is blocked. Access rules: `~/.local/share/omp-seo/skills/seo-agentic/references/access-policy.md`.
+   real agent is blocked. Access rules: `~/.local/share/omp-seo/omp/references/seo-agentic/references/access-policy.md`.
 5. **Commerce (e-commerce sites only).** Flag UCP presence from step 2
    (`well-known:ucp`) and
    hand depth to `seo-ecommerce` (`ucp_check.py`).
@@ -71,7 +71,7 @@ Run the steps in this order and keep every tool's JSON for the report.
 | P1 | Markdown via `.md` URLs or `Accept: text/markdown` with `Vary: Accept` | `markdown-delivery` |
 | P1 | Stable, visible confirmation states; no hover-only menus or focus traps | manual review (no script evidence; say so if not checked) |
 | P1 (transactional) / P2 | Imperative WebMCP tools bound to existing handlers | `webmcp-tools`, Lighthouse `webmcp-registered-tools` |
-| P1 if tools exist | Tool safety: annotations, confirmation, logging, and no tool description that tells agents to skip confirmation | review the tool list and descriptions from Lighthouse `webmcp-registered-tools` (it sees tools registered by third-party scripts that the page source does not show) against `~/.local/share/omp-seo/skills/seo-agentic/references/webmcp.md` |
+| P1 if tools exist | Tool safety: annotations, confirmation, logging, and no tool description that tells agents to skip confirmation | review the tool list and descriptions from Lighthouse `webmcp-registered-tools` (it sees tools registered by third-party scripts that the page source does not show) against `~/.local/share/omp-seo/omp/references/seo-agentic/references/webmcp.md` |
 | P2 | WebMCP registered on `document.modelContext`, not only the legacy `navigator` entry point | `webmcp-entry-point` |
 | P2 | API Catalog, OAuth metadata (only if you run APIs) | `well-known:api-catalog`, `well-known:oauth-*` |
 | P3 | A2A agent card, UCP profile (only if you run them) | `well-known:agent-card.json`, `well-known:ucp` |
@@ -116,9 +116,9 @@ omp-seo-run agentic_fix.py webmcp <url> --json
   `ai-train=yes` or `no`; do not decide it for them.
 - `webmcp` drafts one tool per real form, submitting through the form so the
   UI's own handler runs. Mark sends, purchases and deletes consequential and
-  keep a human confirmation step. Read `~/.local/share/omp-seo/skills/seo-agentic/references/webmcp.md` first.
+  keep a human confirmation step. Read `~/.local/share/omp-seo/omp/references/seo-agentic/references/webmcp.md` first.
 - Markdown negotiation for nginx, with a tested config, is in
-  `~/.local/share/omp-seo/skills/seo-agentic/references/discovery-and-markdown.md`.
+  `~/.local/share/omp-seo/omp/references/seo-agentic/references/discovery-and-markdown.md`.
 
 ## Honest-reporting rules
 
@@ -130,13 +130,13 @@ omp-seo-run agentic_fix.py webmcp <url> --json
   Google Search.
 - State the Lighthouse version and test date with every fraction; WebMCP
   audits depend on the testing browser.
-- For any vendor fact, use `~/.local/share/omp-seo/skills/seo-agentic/references/vendor-matrix.md` and keep its source
+- For any vendor fact, use `~/.local/share/omp-seo/omp/references/seo-agentic/references/vendor-matrix.md` and keep its source
   grade. If a row is older than 60 days, say so or run `/seo agentic refresh`.
 
 ## Refresh mode
 
-Follow the "Refresh procedure" in `~/.local/share/omp-seo/skills/seo-agentic/references/vendor-matrix.md`. Update the
-matrix dates, `~/.local/share/omp-seo/skills/seo-agentic/references/lighthouse-agentic-category.md` when the Lighthouse
+Follow the "Refresh procedure" in `~/.local/share/omp-seo/omp/references/seo-agentic/references/vendor-matrix.md`. Update the
+matrix dates, `~/.local/share/omp-seo/omp/references/seo-agentic/references/lighthouse-agentic-category.md` when the Lighthouse
 version changes, and the `CHECKED_ON` constant in `agentic_check.py` together.
 
 ## Security
@@ -153,16 +153,16 @@ version changes, and the `CHECKED_ON` constant in `agentic_check.py` together.
 
 ## Reference files
 
-- `~/.local/share/omp-seo/skills/seo-agentic/references/lighthouse-agentic-category.md`: the seven audits, the fraction
+- `~/.local/share/omp-seo/omp/references/seo-agentic/references/lighthouse-agentic-category.md`: the seven audits, the fraction
   math, maximum N, the axe rule list, ARD discovery order
-- `~/.local/share/omp-seo/skills/seo-agentic/references/agent-friendly-pages.md`: page-level accessibility and layout
+- `~/.local/share/omp-seo/omp/references/seo-agentic/references/agent-friendly-pages.md`: page-level accessibility and layout
   criteria for agents
-- `~/.local/share/omp-seo/skills/seo-agentic/references/access-policy.md`: tokens by purpose, RFC 9309 group selection,
+- `~/.local/share/omp-seo/omp/references/seo-agentic/references/access-policy.md`: tokens by purpose, RFC 9309 group selection,
   Content-Signal, WAF, Web Bot Auth
-- `~/.local/share/omp-seo/skills/seo-agentic/references/discovery-and-markdown.md`: llms.txt, Markdown delivery (tested
+- `~/.local/share/omp-seo/omp/references/seo-agentic/references/discovery-and-markdown.md`: llms.txt, Markdown delivery (tested
   nginx), ai-catalog.json, `/.well-known` documents, commerce pointers
-- `~/.local/share/omp-seo/skills/seo-agentic/references/webmcp.md`: status, consumers, API, safe patterns
-- `~/.local/share/omp-seo/skills/seo-agentic/references/vendor-matrix.md`: dated, source-graded vendor facts and the
+- `~/.local/share/omp-seo/omp/references/seo-agentic/references/webmcp.md`: status, consumers, API, safe patterns
+- `~/.local/share/omp-seo/omp/references/seo-agentic/references/vendor-matrix.md`: dated, source-graded vendor facts and the
   refresh procedure
 
 ## Error Handling

@@ -51,7 +51,7 @@ omp-seo-run dataforseo_costs.py log <endpoint> <actual_cost>
 - `/seo dataforseo costs summary` → show 7-day spending history
 - `/seo dataforseo costs config --mode threshold --threshold 0.50` → configure approval mode
 
-Load `~/.local/share/omp-seo/skills/seo-dataforseo/references/cost-tiers.md` for the full pricing table, budget presets, and cost reduction tips.
+Load `~/.local/share/omp-seo/omp/references/seo-dataforseo/references/cost-tiers.md` for the full pricing table, budget presets, and cost reduction tips.
 
 ## Quick Reference
 
@@ -361,7 +361,7 @@ Track how LLMs mention brands, domains, and topics. Critical for GEO. Measures a
 
 ## Available Utility Tools
 
-Additional DataForSEO MCP tools are available for internal use but do not have dedicated commands. Load `~/.local/share/omp-seo/skills/seo-dataforseo/references/tool-catalog.md` when you need to find a specific utility tool (location lookups, bulk operations, historical data, filter options).
+Additional DataForSEO MCP tools are available for internal use but do not have dedicated commands. Load `~/.local/share/omp-seo/omp/references/seo-dataforseo/references/tool-catalog.md` when you need to find a specific utility tool (location lookups, bulk operations, historical data, filter options).
 
 ## Cross-Skill Integration
 

@@ -25,7 +25,7 @@ merged into core during the March 2024 update).
 
 ## E-E-A-T Framework (updated Sept 2025 QRG)
 
-Read `~/.local/share/omp-seo/skills/seo/references/eeat-framework.md` for full criteria and `~/.local/share/omp-seo/skills/seo/references/eeat-scoring-guide.md` for score bands.
+Read `~/.local/share/omp-seo/omp/references/seo/references/eeat-framework.md` for full criteria and `~/.local/share/omp-seo/omp/references/seo/references/eeat-scoring-guide.md` for score bands.
 
 ### Experience (first-hand signals)
 - Original research, case studies, before/after results

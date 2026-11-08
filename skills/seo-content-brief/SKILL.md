@@ -32,7 +32,7 @@ Generate research-backed content briefs that help writers produce pages capable 
 ### 3. Analyse SERPs
 
 - Identify the top 5 ranking pages for the target keyword
-- Filter out non-competitors (Wikipedia, Reddit, Pinterest, Amazon, YouTube, government sites, SEO tool pages, job boards, directories, news aggregators, social platforms). See `~/.local/share/omp-seo/skills/seo-content-brief/references/excluded-domains.md` for the full list.
+- Filter out non-competitors (Wikipedia, Reddit, Pinterest, Amazon, YouTube, government sites, SEO tool pages, job boards, directories, news aggregators, social platforms). See `~/.local/share/omp-seo/omp/references/seo-content-brief/references/excluded-domains.md` for the full list.
 - Score each real competitor: Depth (1-10), Formatting (1-10), SEO (1-10), UX (1-10)
 - Identify three gap types:
   - **Topic gaps:** subtopics competitors miss entirely
@@ -51,7 +51,7 @@ Identify what SERP format Google rewards for this query: long-form guide, listic
 
 ### 5. Build the Brief
 
-Apply the page-type template from `~/.local/share/omp-seo/skills/seo-content-brief/references/page-type-templates.md`, then customise based on competitor gaps and search intent.
+Apply the page-type template from `~/.local/share/omp-seo/omp/references/seo-content-brief/references/page-type-templates.md`, then customise based on competitor gaps and search intent.
 
 ## Critical Rules
 
@@ -81,7 +81,7 @@ For non-hub pages (single service page, blog post), use site structure to sugges
 
 ## Keyword Placement
 
-Read `~/.local/share/omp-seo/skills/seo-content-brief/references/keyword-density.md` for the full rules. Summary:
+Read `~/.local/share/omp-seo/omp/references/seo-content-brief/references/keyword-density.md` for the full rules. Summary:
 
 **Primary keyword use:** Use the primary keyword naturally in high-value locations.
 - Do not optimize to a fixed density. Treat density checks as optional internal readability/stuffing heuristics only.

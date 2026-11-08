@@ -12,7 +12,7 @@ Google's official position, published under Search Central docs:
 > "From Google Search's perspective, optimizing for generative AI search is
 > optimizing for the search experience, and thus **still SEO**."
 
-Read `~/.local/share/omp-seo/skills/seo-geo/references/google-ai-optimization-guide.md` for the full synthesis,
+Read `~/.local/share/omp-seo/omp/references/seo-geo/references/google-ai-optimization-guide.md` for the full synthesis,
 myth-busting list (`llms.txt`, chunking, AI-rephrasing, mention-farming,
 all rejected by Google as ineffective), and the Who/How/Why test for
 content quality.
@@ -133,7 +133,7 @@ Multi-modal content can support selection in AI answers (third-party claims only
 **Check for:**
 - Server-side rendering (SSR) vs client-only content
 - AI crawler access in robots.txt
-- llms.txt presence (reported for completeness; it carries **no weight** in this score, see `~/.local/share/omp-seo/skills/seo-geo/references/llmstxt-evidence.md`)
+- llms.txt presence (reported for completeness; it carries **no weight** in this score, see `~/.local/share/omp-seo/omp/references/seo-geo/references/llmstxt-evidence.md`)
 - RSL 1.0 licensing terms
 
 ---
@@ -221,7 +221,7 @@ name the specific user-agent that was checked and the specific capability it gov
 
 ## llms.txt Standard
 
-Read `~/.local/share/omp-seo/skills/seo-geo/references/llmstxt-evidence.md` for the primary-source evidence (Mueller, Illyes, SE Ranking 300k-domain study, OtterlyAI server-log audit) on why `/llms.txt` is not currently a citation lever for major AI search systems. claude-seo reports presence but assigns no citation-ranking weight.
+Read `~/.local/share/omp-seo/omp/references/seo-geo/references/llmstxt-evidence.md` for the primary-source evidence (Mueller, Illyes, SE Ranking 300k-domain study, OtterlyAI server-log audit) on why `/llms.txt` is not currently a citation lever for major AI search systems. claude-seo reports presence but assigns no citation-ranking weight.
 
 > **Google now states this explicitly.** Google's AI optimization guide, published
 > 2026-05-15 (llms.txt guidance clarified 2026-06-15, last updated 2026-07-10), says `llms.txt` and other AI-text files are

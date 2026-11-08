@@ -37,7 +37,7 @@ well-optimized it is.
 
 ### Step 2: SERP Backwards Analysis
 
-Read `~/.local/share/omp-seo/skills/seo-sxo/references/page-type-taxonomy.md` for classification rules.
+Read `~/.local/share/omp-seo/omp/references/seo-sxo/references/page-type-taxonomy.md` for classification rules.
 
 1. Search Google for the target keyword (WebSearch)
 2. For each of the top 10 organic results, record:
@@ -76,14 +76,14 @@ This is the core SXO insight. Compare target page type against SERP consensus.
 | Any type match | - | ALIGNED | Focus on content depth and UX |
 
 **Classification rules:**
-- Classify target page using `~/.local/share/omp-seo/skills/seo-sxo/references/page-type-taxonomy.md`
+- Classify target page using `~/.local/share/omp-seo/omp/references/seo-sxo/references/page-type-taxonomy.md`
 - Classify each SERP result using the same taxonomy
 - Flag mismatch if target type differs from SERP dominant type
 - If SERP is fragmented (no dominant type), note opportunity for differentiation
 
 ### Step 4: User Story Derivation
 
-Read `~/.local/share/omp-seo/skills/seo-sxo/references/user-story-framework.md` for the full framework.
+Read `~/.local/share/omp-seo/omp/references/seo-sxo/references/user-story-framework.md` for the full framework.
 
 From SERP signals, derive user stories:
 
@@ -121,7 +121,7 @@ Compare the target page against SERP expectations across 7 dimensions:
 
 ### Step 6: Persona-Based Scoring
 
-Read `~/.local/share/omp-seo/skills/seo-sxo/references/persona-scoring.md` for methodology.
+Read `~/.local/share/omp-seo/omp/references/seo-sxo/references/persona-scoring.md` for methodology.
 
 1. Derive 4-7 personas from SERP intent signals:
    - Cluster PAA questions by theme
@@ -139,7 +139,7 @@ Read `~/.local/share/omp-seo/skills/seo-sxo/references/persona-scoring.md` for m
 
 Only execute when `/seo sxo wireframe` is invoked.
 
-Read `~/.local/share/omp-seo/skills/seo-sxo/references/wireframe-templates.md` for templates.
+Read `~/.local/share/omp-seo/omp/references/seo-sxo/references/wireframe-templates.md` for templates.
 
 1. Generate IST (current state) wireframe from parsed page structure
 2. Generate SOLL (target state) wireframe based on:
